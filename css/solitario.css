@@ -69,3 +69,9 @@ div.tapete#sobrantes{
 div.tapete.receptor{
 	background-color: lightgreen;
 }
+
+#reset {
+    display: block;
+    margin: 0 auto;
+	margin-bottom: 50px;
+}
