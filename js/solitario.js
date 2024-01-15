@@ -36,12 +36,12 @@ let contReceptor4   = document.getElementById("contador_receptor4");
 let contMovimientos = document.getElementById("contador_movimientos");
 
 // Tiempo
-let contTiempo  = document.getElementById("contador_tiempo"); // span cuenta tiempo
+let contTiempo; // span cuenta tiempo
 let segundos 	 = 0;    // cuenta de segundos
 let temporizador = null; // manejador del temporizador
 
 /***** FIN DECLARACIÓN DE VARIABLES GLOBALES *****/
-
+document.addEventListener("DOMContentLoaded", comenzarJuego);
  
 // Rutina asociada a boton reset
 /*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
@@ -61,16 +61,22 @@ function comenzarJuego() {
 	*/
 
 	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/	
-    
+    document.getElementById('reset').addEventListener('click', resetGame);
+
+	contTiempo = document.getElementById("contador_tiempo"); // hay 
 	
 	// Barajar y dejar mazoInicial en tapete inicial
 	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
 
+	cargarTapeteInicial(mazoInicial);
+
 	// Puesta a cero de contadores de mazos
 	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
+
 	
 	// Arrancar el conteo de tiempo
 	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
+	arrancarTiempo();
 
 } // comenzarJuego
 
@@ -98,6 +104,26 @@ function comenzarJuego() {
 	el resultado de la llamada a setInterval en alguna variable para llamar oportunamente
 	a clearInterval en su caso.   
 */
+
+function resetGame(){
+	arrancarTiempo();
+}
+
+function cargarMazoInicial(){
+
+	return palos.flatMap(palo => numeros.map(numero => {
+        let imgElement = new Image()
+        imgElement.src = `imagenes/baraja/${numero}-${palo}.png` // TODO --> Revisar path
+        imgElement.id = `${numero}-${palo}`;
+        imgElement.alt = `${numero}-${palo}`;
+        imgElement.setAttribute('data-numero', numero.toString());
+        imgElement.setAttribute('data-palo', palo);
+
+        return imgElement;
+    }))
+	
+}
+
 
 function arrancarTiempo(){
 	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
@@ -127,6 +153,7 @@ function arrancarTiempo(){
 */
 function barajar(mazo) {
 	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/	
+	mazo.sort(() => Math.random() - 0.5);
 } // barajar
 
 
@@ -163,5 +190,5 @@ function decContador(contador){
 	valor especificado
 */
 function setContador(contador, valor) {
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
+	contador.textContent = valor.toString();
 } // setContador
