@@ -22,6 +22,14 @@ h1#titulo {
 	color: #E65014;
 }
 
+/* Centrado del título y color */
+img#logoVIU {
+	text-align: center;
+	width: 100px; /* Establecer el ancho deseado */
+    height: auto;
+}
+
+
 /* Centrado de los marcadores de tiempo y movimientos */
 h2#marcadores{ 
 	text-align: center; 
