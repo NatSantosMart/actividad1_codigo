@@ -69,7 +69,7 @@ div.tapete#sobrantes{
 div.tapete.receptor{
 	background-color: lightgreen;
 }
-
+/* Posicion boton reset */
 #reset {
     display: block;
     margin: 0 auto;
