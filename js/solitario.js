@@ -39,6 +39,7 @@ let contMovimientos = document.getElementById("contador_movimientos");
 let contTiempo; // span cuenta tiempo
 let segundos 	 = 0;    // cuenta de segundos
 let temporizador = null; // manejador del temporizador
+let contador     = 0;    // contador de cartas
 
 /***** FIN DECLARACIÓN DE VARIABLES GLOBALES *****/
 document.addEventListener("DOMContentLoaded", comenzarJuego);
@@ -60,7 +61,23 @@ function comenzarJuego() {
 	el elemento img, inclúyase como elemento del array mazoInicial. 
 	*/
 
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/	
+	tapeteInicial   = document.getElementById("inicial");
+
+	palos.forEach(palo => {
+        numeros.forEach(numero => {
+            let imgElement = new Image();
+            imgElement.src = `imagenes/baraja/${numero}-${palo}.png`;
+			 // Asegúrate de tener el path correcto
+            imgElement.id = `${numero}-${palo}`;
+            imgElement.alt = `${numero}-${palo}`;
+            imgElement.setAttribute('data-numero', numero.toString());
+            imgElement.setAttribute('data-palo', palo);
+
+            mazoInicial.push(imgElement);
+        });
+    });
+
+	
     document.getElementById('reset').addEventListener('click', resetGame);
 
 	contTiempo = document.getElementById("contador_tiempo"); // hay 
@@ -78,7 +95,7 @@ function comenzarJuego() {
 	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
 	arrancarTiempo();
 
-} // comenzarJuego
+} 
 
 
 /**
@@ -113,7 +130,7 @@ function cargarMazoInicial(){
 
 	return palos.flatMap(palo => numeros.map(numero => {
         let imgElement = new Image()
-        imgElement.src = `imagenes/baraja/${numero}-${palo}.png` // TODO --> Revisar path
+        imgElement.src = `imagenes/baraja/${numero}-${palo}.png`
         imgElement.id = `${numero}-${palo}`;
         imgElement.alt = `${numero}-${palo}`;
         imgElement.setAttribute('data-numero', numero.toString());
@@ -126,7 +143,7 @@ function cargarMazoInicial(){
 
 
 function arrancarTiempo(){
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
+	
 	if (temporizador) clearInterval(temporizador);
     let hms = function (){
 			let seg = Math.trunc( segundos % 60 );
@@ -142,7 +159,7 @@ function arrancarTiempo(){
     hms(); // Primera visualización 00:00:00
 	temporizador = setInterval(hms, 1000);
     	
-} // arrancarTiempo
+}
 
 
 /**
@@ -166,7 +183,23 @@ function barajar(mazo) {
 	Al final se debe ajustar el contador de cartas a la cantidad oportuna
 */
 function cargarTapeteInicial(mazo) {
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/	
+	
+	mazo.forEach((carta, index) => {
+        carta.style.position = 'absolute';
+        carta.style.left = index * paso * 1.5  + 'px';
+		carta.style.top = index * paso *2.5 + 'px';
+		
+		carta.style.width = '20%'; 
+        if(tapeteInicial){
+			tapeteInicial.appendChild(carta);
+		}
+        // Agregar la carta al tapete inicial
+        //console.log(carta.id)
+    });
+
+    // Ajustar el contador de cartas en el tapete inicial
+    setContador(contInicial, mazo.length);
+	
 } // cargarTapeteInicial
 
 
@@ -174,21 +207,24 @@ function cargarTapeteInicial(mazo) {
  	Esta función debe incrementar el número correspondiente al contenido textual
    	del elemento que actúa de contador
 */
-function incContador(contador){
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/	
-} // incContador
+function incContador(){
+	contador ++;	
+} 
 
 /**
 	Idem que anterior, pero decrementando 
 */
-function decContador(contador){
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! ***/	
-} // decContador
+function decContador(){
+	contador --;
+} 
 
 /**
 	Similar a las anteriores, pero ajustando la cuenta al
 	valor especificado
 */
 function setContador(contador, valor) {
-	contador.textContent = valor.toString();
-} // setContador
+	if(contador){
+		contador.textContent = valor.toString();
+	}
+	
+} 
