@@ -43,6 +43,21 @@ let contador     = 0;    // contador de cartas
 
 /***** FIN DECLARACIÓN DE VARIABLES GLOBALES *****/
 document.addEventListener("DOMContentLoaded", comenzarJuego);
+
+//Drag & Drop
+//Objeto que se mueve
+tapeteInicial.ondragstart = al_mover; 
+tapeteInicial.ondrag = function(e) { }; //no se va a llevar a cabo ningún tipo de acción
+tapeteInicial.ondragend = function() { }; //no se va a llevar a cabo ningún tipo de acción
+
+//Objeto que recibe al que se mueve
+tapeteSobrantes.ondragenter = function(e) { e.preventDefault(); };
+tapeteSobrantes.ondragover = function(e) { e.preventDefault(); };
+tapeteSobrantes.ondragleave = function(e) { e.preventDefault(); };
+tapeteSobrantes.ondrop = function(e) {
+    soltar(e);
+};
+
  
 // Rutina asociada a boton reset
 /*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
@@ -101,6 +116,37 @@ function comenzarJuego() {
 
 } 
 
+//Drag & Drop
+function al_mover(e) {
+	e.dataTransfer.setData( "text/plain/numero", e.target.dataset["numero"] ); 
+	e.dataTransfer.setData( "text/plain/palo", e.target.dataset["palo"] ); 
+	e.dataTransfer.setData( "text/plain/id", e.target.id );
+}
+function soltar(e){
+	
+	e.preventDefault() 
+
+	let numero = e.dataTransfer.getData("text/plain/numero");
+	let palo = e.dataTransfer.getData("text/plain/palo");
+	let carta_id = e.dataTransfer.getData("text/plain/id");
+
+  // Obtener la carta que se está moviendo
+	let carta = new Image()
+	carta.src = 'imagenes/baraja/' + carta_id +'.png';
+	carta.id = carta_id;
+	carta.alt = carta_id;
+	carta.setAttribute('data-numero', numero.toString());
+	carta.setAttribute('data-palo', palo);
+
+   // Estilos CSS de la carta
+    carta.style.position = "absolute";
+    carta.style.top = "50%";
+    carta.style.left = "50%";
+    carta.style.transform = "translate(-50%, -50%)";
+    carta.style.width = '50%';
+
+    tapeteSobrantes.appendChild(carta);
+}
 
 /**
 	Se debe encargar de arrancar el temporizador: cada 1000 ms se
