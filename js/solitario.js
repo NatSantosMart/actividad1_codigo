@@ -88,7 +88,11 @@ function comenzarJuego() {
 	cargarTapeteInicial(mazoInicial);
 
 	// Puesta a cero de contadores de mazos
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
+	setContador(contSobrantes, 0)
+	setContador(contReceptor1, 0)
+	setContador(contReceptor2, 0)
+	setContador(contReceptor3, 0)
+	setContador(contReceptor4, 0)
 
 	
 	// Arrancar el conteo de tiempo
