@@ -47,21 +47,21 @@ document.addEventListener("DOMContentLoaded", comenzarJuego);
 //Drag & Drop
 
 //Objeto que se mueve
-tapeteInicial.ondragstart = al_mover; 
-tapeteInicial.ondrag = function(e) { }; 
-tapeteInicial.ondragend = function() { }; 
+configurarDragAndDropEmisor(); 
 
 //Objeto que recibe la carta
-
-//Recibe en tapete sobrante 
 configurarDragAndDropReceptor(tapeteSobrantes, mazoSobrantes, contSobrantes, 'Sobrante')
 
-//Recibe en tapete receptor 
 configurarDragAndDropReceptor(tapeteReceptor1, mazoReceptor1, contReceptor1, 'Receptor')
 configurarDragAndDropReceptor(tapeteReceptor2, mazoReceptor2, contReceptor2, 'Receptor')
 configurarDragAndDropReceptor(tapeteReceptor3, mazoReceptor3, contReceptor3, 'Receptor')
 configurarDragAndDropReceptor(tapeteReceptor4, mazoReceptor4, contReceptor4, 'Receptor')
 
+function configurarDragAndDropEmisor() {
+    tapeteInicial.ondragstart = al_mover; 
+	tapeteInicial.ondrag = function(e) { }; 
+	tapeteInicial.ondragend = function() { }; 
+}
 function configurarDragAndDropReceptor(tapete_receptor, mazo_receptor, cont_receptor, tipoTapete) {
     tapete_receptor.ondragenter = function(e) { e.preventDefault(); };
 	tapete_receptor.ondragover = function(e) { e.preventDefault(); };
