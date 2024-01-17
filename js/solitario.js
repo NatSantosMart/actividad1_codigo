@@ -51,7 +51,6 @@ configurarDragAndDropEmisor();
 
 //Objeto que recibe la carta
 configurarDragAndDropReceptor(tapeteSobrantes, mazoSobrantes, contSobrantes, 'Sobrante')
-
 configurarDragAndDropReceptor(tapeteReceptor1, mazoReceptor1, contReceptor1, 'Receptor')
 configurarDragAndDropReceptor(tapeteReceptor2, mazoReceptor2, contReceptor2, 'Receptor')
 configurarDragAndDropReceptor(tapeteReceptor3, mazoReceptor3, contReceptor3, 'Receptor')
