@@ -55,7 +55,7 @@ tapeteSobrantes.ondragenter = function(e) { e.preventDefault(); };
 tapeteSobrantes.ondragover = function(e) { e.preventDefault(); };
 tapeteSobrantes.ondragleave = function(e) { e.preventDefault(); };
 tapeteSobrantes.ondrop = function (e) {
-    soltar(e,  tapeteInicial, tapeteSobrantes, mazoInicial, mazoSobrantes);
+    soltar(e,  tapeteInicial, tapeteSobrantes, mazoInicial, mazoSobrantes, contInicial, contSobrantes);
 };
 
  
@@ -106,7 +106,7 @@ function al_mover(e) {
 	e.dataTransfer.setData( "text/plain/palo", e.target.dataset["palo"] ); 
 	e.dataTransfer.setData( "text/plain/id", e.target.id );
 }
-function soltar(e, tapete_origen, tapete_destino, mazo_origen, mazo_destino) {
+function soltar(e, tapete_origen, tapete_destino, mazo_origen, mazo_destino, cont_origen, cont_destino) {
     e.preventDefault();
 
     let numero = e.dataTransfer.getData("text/plain/numero");
@@ -133,32 +133,24 @@ function soltar(e, tapete_origen, tapete_destino, mazo_origen, mazo_destino) {
 			// Agregar carta al tapete destino
 			tapete_destino.appendChild(carta);
 			mazo_destino.push(carta);
+			cont_destino.incContador = function() {
+				incContador();
+			};
+			setContador(cont_destino, mazo_destino.length);
 
-			// Eliminar carta del mazo origen y Actualizar el tapeteInicial
+			// Eliminar carta del mazo origen 
 			mazo_origen.pop();
 			actualizarTapeteInicial();
+			cont_origen.decContador = function() {
+				decContador();
+			};
+			console.log(cont_origen)
+			console.log(mazo_origen.length)
+			setContador(contInicial, mazo_origen.length);
 		}
 	}
 }
 
-function validarCondiciones(tapete_destino, mazo_origen, mazo_destino){
-	    // Comprobar que existe carta en mazo origen
-		let index = mazo_origen.findIndex(c => c.id === carta_id);
-		if (index !== -1) {
-	
-			// Comprobar si la carta movida es la última del mazo original
-				if (index === mazo_origen.length - 1) {
-					
-				// Agregar carta al tapete destino
-				tapete_destino.appendChild(carta);
-				mazo_destino.push(carta);
-	
-				// Eliminar carta del mazo origen y Actualizar el tapeteInicial
-				mazo_origen.pop();
-				actualizarTapeteInicial();
-			}
-		}
-}
 /**
 	Se debe encargar de arrancar el temporizador: cada 1000 ms se
 	debe ejecutar una función que a partir de la cuenta autoincrementada
@@ -299,6 +291,5 @@ function decContador(){
 function setContador(contador, valor) {
 	if(contador){
 		contador.textContent = valor.toString();
-	}
-	
+	}	
 } 
