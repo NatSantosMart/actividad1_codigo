@@ -134,7 +134,7 @@ function soltar(e, tapete_origen, tapete_destino, mazo_origen, mazo_destino, con
     carta.style.top = "50%";
     carta.style.left = "50%";
     carta.style.transform = "translate(-50%, -50%)";
-    carta.style.width = '50%';
+    carta.style.width = '62%';
 
 	// Comprobar que existe carta en mazo origen
 	let index = mazo_origen.findIndex(c => c.id === carta_id);
