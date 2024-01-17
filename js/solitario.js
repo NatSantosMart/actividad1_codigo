@@ -54,8 +54,8 @@ tapeteInicial.ondragend = function() { }; //no se va a llevar a cabo ningún tip
 tapeteSobrantes.ondragenter = function(e) { e.preventDefault(); };
 tapeteSobrantes.ondragover = function(e) { e.preventDefault(); };
 tapeteSobrantes.ondragleave = function(e) { e.preventDefault(); };
-tapeteSobrantes.ondrop = function(e) {
-    soltar(e);
+tapeteSobrantes.ondrop = function (e) {
+    soltar(e,  tapeteInicial, tapeteSobrantes, mazoInicial, mazoSobrantes);
 };
 
  
@@ -76,30 +76,15 @@ function comenzarJuego() {
 	el elemento img, inclúyase como elemento del array mazoInicial. 
 	*/
 
-	tapeteInicial   = document.getElementById("inicial");
-
-	palos.forEach(palo => {
-        numeros.forEach(numero => {
-            let imgElement = new Image();
-            imgElement.src = `imagenes/baraja/${numero}-${palo}.png`;
-			 // Asegúrate de tener el path correcto
-            imgElement.id = `${numero}-${palo}`;
-            imgElement.alt = `${numero}-${palo}`;
-            imgElement.setAttribute('data-numero', numero.toString());
-            imgElement.setAttribute('data-palo', palo);
-
-            mazoInicial.push(imgElement);
-        });
-    });
-
+	//Crear mazoInicial
+	cargarMazoInicial(); 
 	
     document.getElementById('reset').addEventListener('click', resetGame);
 
 	contTiempo = document.getElementById("contador_tiempo"); // hay 
 	
 	// Barajar y dejar mazoInicial en tapete inicial
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
-
+	barajar(mazoInicial); 
 	cargarTapeteInicial(mazoInicial);
 
 	// Puesta a cero de contadores de mazos
@@ -111,7 +96,6 @@ function comenzarJuego() {
 
 	
 	// Arrancar el conteo de tiempo
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
 	arrancarTiempo();
 
 } 
@@ -122,32 +106,59 @@ function al_mover(e) {
 	e.dataTransfer.setData( "text/plain/palo", e.target.dataset["palo"] ); 
 	e.dataTransfer.setData( "text/plain/id", e.target.id );
 }
-function soltar(e){
-	
-	e.preventDefault() 
+function soltar(e, tapete_origen, tapete_destino, mazo_origen, mazo_destino) {
+    e.preventDefault();
 
-	let numero = e.dataTransfer.getData("text/plain/numero");
-	let palo = e.dataTransfer.getData("text/plain/palo");
-	let carta_id = e.dataTransfer.getData("text/plain/id");
+    let numero = e.dataTransfer.getData("text/plain/numero");
+    let palo = e.dataTransfer.getData("text/plain/palo");
+    let carta_id = e.dataTransfer.getData("text/plain/id");
 
-  // Obtener la carta que se está moviendo
-	let carta = new Image()
-	carta.src = 'imagenes/baraja/' + carta_id +'.png';
-	carta.id = carta_id;
-	carta.alt = carta_id;
-	carta.setAttribute('data-numero', numero.toString());
-	carta.setAttribute('data-palo', palo);
+    // Obtener la carta que se está moviendo
+    let carta = getCartaFromId(carta_id, numero, palo); 
 
-   // Estilos CSS de la carta
+    // Estilos CSS de la carta en tapete destino
     carta.style.position = "absolute";
     carta.style.top = "50%";
     carta.style.left = "50%";
     carta.style.transform = "translate(-50%, -50%)";
     carta.style.width = '50%';
 
-    tapeteSobrantes.appendChild(carta);
+	// Comprobar que existe carta en mazo origen
+	let index = mazo_origen.findIndex(c => c.id === carta_id);
+	if (index !== -1) {
+
+		// Comprobar si la carta movida es la última del mazo original
+			if (index === mazo_origen.length - 1) {
+				
+			// Agregar carta al tapete destino
+			tapete_destino.appendChild(carta);
+			mazo_destino.push(carta);
+
+			// Eliminar carta del mazo origen y Actualizar el tapeteInicial
+			mazo_origen.pop();
+			actualizarTapeteInicial();
+		}
+	}
 }
 
+function validarCondiciones(tapete_destino, mazo_origen, mazo_destino){
+	    // Comprobar que existe carta en mazo origen
+		let index = mazo_origen.findIndex(c => c.id === carta_id);
+		if (index !== -1) {
+	
+			// Comprobar si la carta movida es la última del mazo original
+				if (index === mazo_origen.length - 1) {
+					
+				// Agregar carta al tapete destino
+				tapete_destino.appendChild(carta);
+				mazo_destino.push(carta);
+	
+				// Eliminar carta del mazo origen y Actualizar el tapeteInicial
+				mazo_origen.pop();
+				actualizarTapeteInicial();
+			}
+		}
+}
 /**
 	Se debe encargar de arrancar el temporizador: cada 1000 ms se
 	debe ejecutar una función que a partir de la cuenta autoincrementada
@@ -177,20 +188,30 @@ function resetGame(){
 }
 
 function cargarMazoInicial(){
+	palos.forEach(palo => {
+        numeros.forEach(numero => {
+            let imgElement = new Image();
+            imgElement.src = `imagenes/baraja/${numero}-${palo}.png`;
+            imgElement.id = `${numero}-${palo}`;
+            imgElement.alt = `${numero}-${palo}`;
+            imgElement.setAttribute('data-numero', numero.toString());
+            imgElement.setAttribute('data-palo', palo);
 
-	return palos.flatMap(palo => numeros.map(numero => {
-        let imgElement = new Image()
-        imgElement.src = `imagenes/baraja/${numero}-${palo}.png`
-        imgElement.id = `${numero}-${palo}`;
-        imgElement.alt = `${numero}-${palo}`;
-        imgElement.setAttribute('data-numero', numero.toString());
-        imgElement.setAttribute('data-palo', palo);
-
-        return imgElement;
-    }))
+            mazoInicial.push(imgElement);
+        });
+    });
 	
 }
+function getCartaFromId(carta_id, numero, palo) {
+	let carta = new Image();
+    carta.src = 'imagenes/baraja/' + carta_id + '.png';
+    carta.id = carta_id;
+    carta.alt = carta_id;
+    carta.setAttribute('data-numero', numero.toString());
+    carta.setAttribute('data-palo', palo);
 
+	return carta; 
+}
 
 function arrancarTiempo(){
 	
@@ -207,8 +228,7 @@ function arrancarTiempo(){
 		}
 	segundos = 0;
     hms(); // Primera visualización 00:00:00
-	temporizador = setInterval(hms, 1000);
-    	
+	temporizador = setInterval(hms, 1000);    	
 }
 
 
@@ -218,8 +238,7 @@ function arrancarTiempo(){
 	por referencia, de modo que si se altera el orden de dicho array
 	dentro de la rutina, esto aparecerá reflejado fuera de la misma.
 */
-function barajar(mazo) {
-	/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/	
+function barajar(mazo) {	
 	mazo.sort(() => Math.random() - 0.5);
 } // barajar
 
@@ -243,15 +262,20 @@ function cargarTapeteInicial(mazo) {
         if(tapeteInicial){
 			tapeteInicial.appendChild(carta);
 		}
-        // Agregar la carta al tapete inicial
-        //console.log(carta.id)
     });
 
     // Ajustar el contador de cartas en el tapete inicial
     setContador(contInicial, mazo.length);
 	
-} // cargarTapeteInicial
+} 
 
+function actualizarTapeteInicial() {
+    // Limpiar el tapeteInicial
+    tapeteInicial.innerHTML = '';
+
+    // Cargar las cartas restantes del mazoInicial en el tapeteInicial
+    cargarTapeteInicial(mazoInicial);
+}
 
 /**
  	Esta función debe incrementar el número correspondiente al contenido textual
