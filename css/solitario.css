@@ -15,6 +15,9 @@
 	right: 3px;
 }
 
+body {
+    background-color: #0B132B; /* Cambia el color según tus preferencias */
+}
 
 /* Centrado del título y color */
 h1#titulo {
@@ -30,6 +33,11 @@ img#logoVIU {
 /* Centrado de los marcadores de tiempo y movimientos */
 h2#marcadores{ 
 	text-align: center; 
+	color: white; 
+	font-weight: normal; 
+}
+#contador_tiempo, #contador_movimientos{
+	font-weight: 600; 
 }
 
 /* Mesa que contiene a los tapetes centrados */
@@ -51,7 +59,7 @@ div.tapete{
 div.tapete#inicial{
 	width: 340px;
 	height: 340px;			
-	background-color: lightgrey;
+	background-color: #91acc4;
 }
 
 /* Dimensiones para todos los tapetes salvo el inicial */
@@ -62,19 +70,32 @@ div.tapete:not(#inicial){
 
 /* Color de fondo para el tapete de las cartas sobrantes */
 div.tapete#sobrantes{
-	background-color: lightblue;
+	background-color:  #ffa366;
 }
 
 /* Color de fondo de los tapetes receptores */
 div.tapete.receptor{
-	background-color: lightgreen;
+	background-color: #65dbca;
 }
 /* Posicion boton reset */
 #reset {
     display: block;
     margin: 0 auto;
-	margin-bottom: 50px;
+    margin-bottom: 50px;
+    border: 2px solid white; 
+	padding: 10px 40px;
+    font-size: 18px;
+    color: white;
+	background-color: #E65014;
+    border-radius: 80px; 
+    cursor: pointer;
 }
+
+#reset:hover {
+	background-color: #db805d;
+    border-color: #FFFFFF; 
+}
+
 
 #iconos {
     position: absolute;
