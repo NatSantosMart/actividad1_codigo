@@ -1,5 +1,4 @@
 /***** INICIO DECLARACIÓN DE VARIABLES GLOBALES *****/
-
 // Array de palos
 let palos = ["viu", "cua", "hex", "cir"];
 // Array de número de cartas

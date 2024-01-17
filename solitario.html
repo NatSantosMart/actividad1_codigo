@@ -7,12 +7,23 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+		<!-- CSS iconos -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 		<link rel="stylesheet" href="css/solitario.css">
 		
 	</head>
 
     <body>
 		<div class="central">
+			
+			<div id="iconos">
+				<i id="btnToggleAudio" class='fa-solid fa-volume-xmark'; onclick="toggleAudio()"></i>
+			</div>
+			<audio id="cancion">
+				<source src="audio/cancion.mp3" type="audio/mp3">
+				Tu navegador no soporta la etiqueta de audio.
+			</audio>
 			
 			<!-- Título principal -->
 			<h1 id="titulo">Juego del solitario
@@ -42,12 +53,13 @@
 				<div id="receptor3" class="tapete receptor"><span id="contador_receptor3" class="contador"></span></div>
 				<div id="receptor4" class="tapete receptor"><span id="contador_receptor4" class="contador"></span></div>			
 			</div>	
-
+			
 			<!-- Botón de reset que reinicia todo: partida, contadores de tiempo, de movimientos, ... -->
 			<button id="reset" class="btn btn-danger">Reiniciar</button>
 			
 		</div> <!-- class="central" -->
 		<!-- Script después de que se cargue completamente el HTML -->
+		<script src="js/audio.js"></script> 
 		<script src="js/solitario.js"></script>  
     </body>
 </html>
