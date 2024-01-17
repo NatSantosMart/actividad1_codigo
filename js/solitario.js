@@ -91,7 +91,9 @@ function comenzarJuego() {
 	
     document.getElementById('reset').addEventListener('click', resetGame);
 
-	contTiempo = document.getElementById("contador_tiempo"); // hay 
+	contTiempo = document.getElementById("contador_tiempo"); 
+
+	document.getElementById('reset-end').addEventListener('click', () => {document.getElementById('modal-endgame').style.display = "none"; resetGame()});
 	
 	// Barajar y dejar mazoInicial en tapete inicial
 	barajar(mazoInicial); 
@@ -103,6 +105,7 @@ function comenzarJuego() {
 	setContador(contReceptor2, 0)
 	setContador(contReceptor3, 0)
 	setContador(contReceptor4, 0)
+	setContador(contMovimientos, 0)
 
 	
 	// Arrancar el conteo de tiempo
@@ -207,6 +210,25 @@ function validarCondicionesMovimiento (carta, tapete_origen, tapete_destino, maz
 */
 
 function resetGame(){
+	[contInicial, contSobrantes, contReceptor1, contReceptor2, contReceptor3, contReceptor4, contMovimientos].forEach((contador) => setContador(contador, 0));
+
+    // Restablecimiento de mazos
+    [mazoInicial, mazoSobrantes, mazoReceptor1, mazoReceptor2, mazoReceptor3, mazoReceptor4].forEach((mazo) => mazo.length = 0);
+
+	// Restablecimiento de tapetes borrando las posibles cartas que tengan asociadas
+    [tapeteInicial, tapeteSobrantes, tapeteReceptor1, tapeteReceptor2, tapeteReceptor3, tapeteReceptor4].forEach((tapete) => {
+        while (tapete.lastChild && tapete.lastChild.tagName === "IMG") {
+            tapete.removeChild(tapete.lastChild)
+        }
+    });
+
+	// Creación del mazo inicial de juego
+    cargarMazoInicial()
+
+    // Barajar y cargar el mazoInicial en el tapete inicial
+    barajar(mazoInicial);
+    cargarTapeteInicial(mazoInicial);
+
 	arrancarTiempo();
 }
 
@@ -330,7 +352,22 @@ function insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino
 	cont_destino.incContador = function() {
 		incContador();
 	};
+	contMovimientos.textContent = (parseInt(contMovimientos.textContent) + 1).toString();
 	setContador(cont_destino, mazo_destino.length);
+	console.log(mazoSobrantes.length)
+	if (mazoInicial.length === 0 && mazoSobrantes.length === 0) {
+        finalizarJuego();
+		console.log("ha entrado")
+    } else if (mazoInicial.length === 1) {
+		console.log("ha entrado aqui")
+        // Si no quedan cartas en el tapete sobrante pero aún no ha finalizado el juego se barajan y se disponen en el tapete incial de nuevo
+        mazoInicial = [...mazoSobrantes];
+		console.log(mazoInicial)
+        mazoSobrantes = [];
+        setContador(contSobrantes, 0);
+        barajar(mazoInicial);
+        cargarTapeteInicial(mazoInicial);
+    }
 }
 function eliminarCartaEnTapete (carta, tapete_origen, mazo_origen, cont_origen){
 	mazo_origen.pop();
@@ -340,4 +377,11 @@ function eliminarCartaEnTapete (carta, tapete_origen, mazo_origen, cont_origen){
 	setContador(cont_origen, mazo_origen.length);
 	
 	actualizarTapeteInicial();
+}
+
+function finalizarJuego(){
+	if(temporizador) clearInterval(temporizador)
+    document.getElementById('modal-endgame').style.display = "block";
+    document.getElementById('resumen-movimientos').innerText = contMovimientos.innerText;
+    document.getElementById('resumen-tiempo').innerText = contTiempo.innerText;
 }
