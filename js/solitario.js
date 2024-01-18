@@ -19,6 +19,7 @@ let tapeteReceptor4 = document.getElementById("receptor4");
 
 // Mazos
 let mazoInicial   = [];
+let longitudMazoInicial = 0;
 let mazoSobrantes = [];
 let mazoReceptor1 = [];
 let mazoReceptor2 = [];
@@ -100,12 +101,12 @@ function comenzarJuego() {
 	cargarTapeteInicial(mazoInicial);
 
 	// Puesta a cero de contadores de mazos
-	setContador(contSobrantes, 0)
-	setContador(contReceptor1, 0)
-	setContador(contReceptor2, 0)
-	setContador(contReceptor3, 0)
-	setContador(contReceptor4, 0)
-	setContador(contMovimientos, 0)
+	setContadorTapetes(contSobrantes, 0)
+	setContadorTapetes(contReceptor1, 0)
+	setContadorTapetes(contReceptor2, 0)
+	setContadorTapetes(contReceptor3, 0)
+	setContadorTapetes(contReceptor4, 0)
+	setContadorTapetes(contMovimientos, 0)
 
 	
 	// Arrancar el conteo de tiempo
@@ -210,7 +211,7 @@ function validarCondicionesMovimiento (carta, tapete_origen, tapete_destino, maz
 */
 
 function resetGame(){
-	[contInicial, contSobrantes, contReceptor1, contReceptor2, contReceptor3, contReceptor4, contMovimientos].forEach((contador) => setContador(contador, 0));
+	[contInicial, contSobrantes, contReceptor1, contReceptor2, contReceptor3, contReceptor4, contMovimientos].forEach((contador) => setContadorTapetes(contador, 0));
 
     // Restablecimiento de mazos
     [mazoInicial, mazoSobrantes, mazoReceptor1, mazoReceptor2, mazoReceptor3, mazoReceptor4].forEach((mazo) => mazo.length = 0);
@@ -245,7 +246,7 @@ function cargarMazoInicial(){
             mazoInicial.push(imgElement);
         });
     });
-	
+	longitudMazoInicial = mazoInicial.length;
 }
 function getCartaFromId(carta_id, numero, palo) {
 	let carta = new Image();
@@ -304,13 +305,11 @@ function cargarTapeteInicial(mazo) {
 		carta.style.top = index * paso *2.5 + 'px';
 		
 		carta.style.width = '20%'; 
-        if(tapeteInicial){
-			tapeteInicial.appendChild(carta);
-		}
+		tapeteInicial.appendChild(carta);
     });
 
     // Ajustar el contador de cartas en el tapete inicial
-    setContador(contInicial, mazo.length);	
+    setContadorTapetes(contInicial, mazo.length);	
 } 
 
 function actualizarTapeteInicial() {
@@ -341,42 +340,100 @@ function decContador(){
 	valor especificado
 */
 function setContador(contador, valor) {
-	if(contador){
-		contador.textContent = valor.toString();
-	}	
-} 
+	contador.textContent = valor.toString();
+}
+function setContadorInicial(valor){
+	contador.textContent = valor.toString();
+	console.log("MAZO SOBRANTES: ", mazoSobrantes)
+	
+	if(parseInt(contInicial.textContent)-1 === 0 && parseInt(contReceptor1.textContent)+parseInt(contReceptor2.textContent)+parseInt(contReceptor3.textContent)+parseInt(contReceptor4.textContent) !== longitudMazoInicial){
+		console.log("Barajooooooo")
+		console.log("MAZO SOBRANTES: ", mazoSobrantes)
+		mazoInicial = [...mazoSobrantes];
+		mazoSobrantes = [];
+		barajar(mazoInicial);
+		cargarTapeteInicial(mazoInicial);
+		if(mazoInicial.length > 0){
+			setContadorTapetes(contSobrantes, 0);
+		}
+		
+	
+	}
+	else if(parseInt(contInicial.textContent)-1 === 0 && parseInt(contReceptor1.textContent)+parseInt(contReceptor2.textContent)+parseInt(contReceptor3.textContent)+parseInt(contReceptor4.textContent) !== longitudMazoInicial){
+		console.log("HE entrado aqui")
+	}
+
+
+
+}
+function setContadorTapetes(contador, valor){
+	contador.textContent = valor.toString();
+	
+	// console.log("Nombre contador: ", contador.id)
+	// console.log("Contador: ", contador.textContent)	
+	// if(parseInt(contInicial.textContent) === 0 && contReceptor1+contReceptor2+contReceptor3+contReceptor4 !== longitudMazoInicial){
+	// 	mazoInicial = [...mazoSobrantes];
+	// 	mazoSobrantes = [];
+		
+    //     barajar(mazoInicial);
+    //     cargarTapeteInicial(mazoInicial);
+	// 	setContadorTapetes(contSobrantes, 0);
+	// }
+	// if(contReceptor1+contReceptor2+contReceptor3+contReceptor4 === longitudMazoInicial){
+	// 	console.log("Se debe finalizar aqui")
+	// }
+}
 
 function insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino){
+	console.log(tapete_destino.id, " ", mazo_destino)
+	
 	tapete_destino.appendChild(carta);
 	mazo_destino.push(carta);
-	cont_destino.incContador = function() {
-		incContador();
-	};
+
+	//cont_destino.incContador;
+	
+	setContadorTapetes(cont_destino, parseInt(cont_destino.textContent)+1);
 	contMovimientos.textContent = (parseInt(contMovimientos.textContent) + 1).toString();
-	setContador(cont_destino, mazo_destino.length);
-	console.log(mazoSobrantes.length)
-	if (mazoInicial.length === 0 && mazoSobrantes.length === 0) {
-        finalizarJuego();
-		console.log("ha entrado")
-    } else if (mazoInicial.length === 1) {
-		console.log("ha entrado aqui")
-        // Si no quedan cartas en el tapete sobrante pero aún no ha finalizado el juego se barajan y se disponen en el tapete incial de nuevo
-        mazoInicial = [...mazoSobrantes];
-		console.log(mazoInicial)
-        mazoSobrantes = [];
-        setContador(contSobrantes, 0);
-        barajar(mazoInicial);
-        cargarTapeteInicial(mazoInicial);
-    }
+
+	console.log(cont_destino.textContent)
+	console.log(tapete_destino.id, " POST ", mazo_destino)
+	// if(contInicial === 0){		
+	// 	mazoInicial = [...mazoSobrantes];
+	// 	mazoSobrantes = [];
+	// 	setContadorTapetes(contSobrantes, 0);
+    //     barajar(mazoInicial);
+    //     cargarTapeteInicial(mazoInicial);
+	// }
+	
+	// if (mazoInicial.length === 0 && mazoSobrantes.length === 0) {
+    //     finalizarJuego();
+	// 	console.log("ha entrado")
+    // } else if (mazoInicial.length === 1) {
+	// 	console.log("ha entrado aqui")
+    //     // Si no quedan cartas en el tapete sobrante pero aún no ha finalizado el juego se barajan y se disponen en el tapete incial de nuevo
+    //     mazoInicial = [...mazoSobrantes];
+	// 	console.log(mazoInicial)
+    //     mazoSobrantes = [];
+    //     setContador(contSobrantes, 0);
+    //     barajar(mazoInicial);
+    //     cargarTapeteInicial(mazoInicial);
+    // }
 }
 function eliminarCartaEnTapete (carta, tapete_origen, mazo_origen, cont_origen){
 	mazo_origen.pop();
-	cont_origen.decContador = function() {
-		decContador();
-	};
-	setContador(cont_origen, mazo_origen.length);
 	
-	actualizarTapeteInicial();
+	if(tapete_origen.id === "inicial"){
+		setContadorInicial(parseInt(contInicial.textContent)-1);
+		actualizarTapeteInicial();
+	}
+	else{
+		cont_origen.decContador;
+	setContadorTapetes(cont_origen, mazo_origen.length);
+	}
+	
+	
+	
+	
 }
 
 function finalizarJuego(){
