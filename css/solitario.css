@@ -78,7 +78,7 @@ div.tapete.receptor{
 	background-color: #65dbca;
 }
 /* Posicion boton reset */
-#reset {
+#reset, #reset-end {
     display: block;
     margin: 0 auto;
     margin-bottom: 50px;
@@ -91,7 +91,7 @@ div.tapete.receptor{
     cursor: pointer;
 }
 
-#reset:hover {
+#reset:hover,  #reset-end:hover {
 	background-color: #db805d;
     border-color: #FFFFFF; 
 }
@@ -123,16 +123,18 @@ div.tapete.receptor{
 
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: #9bd0b5;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 60%;
+    height: 65%;
 }
 
-
-.modal-content {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.75rem;
+span {
+    font-size: 18px;
 }
 
+.row {
+    margin-bottom: 10px;
+}

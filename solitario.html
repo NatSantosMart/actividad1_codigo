@@ -60,24 +60,41 @@
 		</div> <!-- class="central" -->
 		<div id="modal-endgame" class="modal">
 			<div class="modal-content">
-				<div class="row d-flex justify-content-center">
-					<div class="col-md-12">
-						<span style="font-family: 'Oswald', sans-serif; font-size: 3rem">Resumen de partida</span><br>
+				<div class="row justify-content-center align-items-center">
+					<div class="col-md-12 text-center">
+						<div>
+							<h2 class="resumen-title">¡Enhorabuena, has completado el juego! <span>🎉</span></h2>
+						</div>
+						<br>
 					</div>
 				</div>
-				<div class="row d-flex justify-content-around">
-					<div class="col-md-auto">
-						<span>Movimientos: <span style="font-weight: bold" id="resumen-movimientos"></span></span>
-					</div>
-					<div class="col-md-auto">
-						<span>Tiempo: <span style="font-weight: bold" id="resumen-tiempo"></span></span>
+				
+				<div class="row justify-content-center align-items-center">
+					<div class="col-md-12 text-center">
+						<div class="resumen-box"> 
+							<h3 class="resumen-title">Resumen de la partida</h3>
+							
+							<div class="row justify-content-center align-items-center">
+								<div class="col-md-12 text-center">
+									<span><strong>Movimientos:</strong> <span id="resumen-movimientos"></span></span>
+								</div>
+							</div>
+							
+							<div class="row justify-content-center align-items-center">
+								<div class="col-md-12 text-center">
+									<span><strong>Tiempo:</strong> <span id="resumen-tiempo"></span></span><br>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="row d-flex justify-content-center mt-3">
+				
+				<div class="row">
 					<div class="col-md-auto">
-						<button role="button" id="reset-end">Reiniciar juego</button>
+						<button role="button" id="reset-end" style="margin-top: 15px;">Reiniciar juego</button>
 					</div>
 				</div>
+				
 			</div>
 		</div>
 		<!-- Script después de que se cargue completamente el HTML -->
