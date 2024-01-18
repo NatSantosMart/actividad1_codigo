@@ -48,10 +48,10 @@ document.addEventListener("DOMContentLoaded", comenzarJuego);
 //Objeto que se mueve
 configurarDragAndDropEmisor(); 
 configurarDragAndDropSobrantes(); 
-configurarDragAndDropReceptor(tapeteReceptor1, mazoReceptor1, contReceptor1, 'Receptor')
-configurarDragAndDropReceptor(tapeteReceptor2, mazoReceptor2, contReceptor2, 'Receptor')
-configurarDragAndDropReceptor(tapeteReceptor3, mazoReceptor3, contReceptor3, 'Receptor')
-configurarDragAndDropReceptor(tapeteReceptor4, mazoReceptor4, contReceptor4, 'Receptor')
+configurarDragAndDropReceptor(tapeteReceptor1, mazoReceptor1, contReceptor1)
+configurarDragAndDropReceptor(tapeteReceptor2, mazoReceptor2, contReceptor2)
+configurarDragAndDropReceptor(tapeteReceptor3, mazoReceptor3, contReceptor3)
+configurarDragAndDropReceptor(tapeteReceptor4, mazoReceptor4, contReceptor4)
 
 function configurarDragAndDropEmisor() {
     tapeteInicial.ondragstart = al_mover; 
@@ -63,7 +63,7 @@ function configurarDragAndDropSobrantes() {
     tapeteSobrantes.ondragover = function(e) { e.preventDefault(); };
     tapeteSobrantes.ondragleave = function(e) { e.preventDefault(); };
     tapeteSobrantes.ondrop = function (e) {
-        soltarSobrantes(e,  tapeteInicial, tapeteSobrantes, mazoInicial, mazoSobrantes, contInicial, contSobrantes, 'Sobrante');
+        soltarSobrantes(e);
     };
 }
 function configurarDragAndDropReceptor(tapete_receptor, mazo_receptor, cont_receptor, tipoTapete) {
@@ -71,7 +71,7 @@ function configurarDragAndDropReceptor(tapete_receptor, mazo_receptor, cont_rece
 	tapete_receptor.ondragover = function(e) { e.preventDefault(); };
 	tapete_receptor.ondragleave = function(e) { e.preventDefault(); };
 	tapete_receptor.ondrop = function (e) {
-		soltarReceptor(e,  tapeteInicial, tapete_receptor, mazoInicial, mazo_receptor, contInicial, cont_receptor, tipoTapete);
+		soltarReceptor(e,  tapeteInicial, tapete_receptor, mazoInicial, mazo_receptor, contInicial, cont_receptor);
 	};
 }
 
@@ -147,7 +147,7 @@ function soltarReceptor(e, tapete_origen, tapete_destino, mazo_origen, mazo_dest
 		}
 	}
 }
-function soltarSobrantes(e, tapete_origen, tapete_destino, mazo_origen, mazo_destino, cont_origen, cont_destino, tipoTapete) {
+function soltarSobrantes(e) {
     e.preventDefault();
 
     let numero = e.dataTransfer.getData("text/plain/numero");
@@ -158,11 +158,11 @@ function soltarSobrantes(e, tapete_origen, tapete_destino, mazo_origen, mazo_des
     let carta = getCartaFromId(carta_id, numero, palo); 
 
 	// Comprobar que existe carta en mazo origen
-	let index = mazo_origen.findIndex(c => c.id === carta_id);
+	let index = mazoInicial.findIndex(c => c.id === carta_id);
 	if (index !== -1) {
 
         // Comprobar si la carta movida es la última del mazo original
-        if (index === mazo_origen.length - 1) {
+        if (index === mazoInicial.length - 1) {
 
             //Se quiere depositar en mazo sobrante
             insertarCartaEnTapete(carta, tapeteSobrantes, mazoSobrantes, contSobrantes)
@@ -383,9 +383,22 @@ function insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino
 	contMovimientos.textContent = (parseInt(contMovimientos.textContent) + 1).toString(); //contador de movimientos
 	setContador(cont_destino, mazo_destino.length); //Es posible que el SetContador se haga dos veces (COMPROBAR!!)
 
+	console.log("mazoInicial.length: " + mazoInicial.length)
 	if (mazoInicial.length === 0 && mazoSobrantes.length === 0) {
         finalizarJuego();
     } else if (mazoInicial.length === 1) {
+		let carta = mazoInicial[mazoInicial.length - 1];
+		carta.style.position = "absolute";
+		carta.style.top = "50%";
+		carta.style.left = "50%";
+		carta.style.transform = "translate(-50%, -50%)";
+		carta.style.width = '62%';
+		tapete_destino.appendChild(carta);
+		mazo_destino.push(carta);
+		cont_destino.incContador = function() {
+			incContador();
+		};
+
         // Si no quedan cartas en el tapete sobrante pero aún no ha finalizado el juego se barajan y se disponen en el tapete incial de nuevo
         mazoInicial = mazoSobrantes.map(carta => {
 			let nuevaCarta = new Image();
@@ -403,16 +416,22 @@ function insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino
 		tapeteSobrantes.querySelectorAll('img').forEach(img => img.remove());
 
         setContador(contSobrantes, 0);
-        barajar(mazoInicial);
+        //barajar(mazoInicial);
         cargarTapeteInicial(mazoInicial);
     }
+	console.log("Carta insertada: " + carta.getAttribute('data-numero') + carta.getAttribute('data-palo')); 
+	console.log("Funcion insertar cont_destino:" + getContador(cont_destino)); 
+	
 }
 function eliminarCartaEnTapete (carta, tapete_origen, mazo_origen, cont_origen){
 	mazo_origen.pop();
 	cont_origen.decContador = function() {
 		decContador();
 	};
+	
 	setContador(cont_origen, mazo_origen.length);
+		
+	console.log("Funcion eliminar cont_origen:" + getContador(cont_origen)); 	
 	
 	actualizarTapeteInicial();
 }
