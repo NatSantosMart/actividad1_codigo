@@ -96,14 +96,13 @@ div.tapete.receptor{
     border-color: #FFFFFF; 
 }
 
-
 #iconos {
     position: absolute;
     left: 90px;
     top: 15%;
     transform: translateY(-50%);
-    font-size: 50px; /* Tamaño de fuente ajustable según tus preferencias */
+    font-size: 50px; 
 }
 #btnToggleAudio {
-	color: #E65014; /* Código de color verde */
+	color: #E65014; 
 }
