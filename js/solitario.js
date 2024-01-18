@@ -384,7 +384,7 @@ function insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino
 	setContador(cont_destino, mazo_destino.length); //Es posible que el SetContador se haga dos veces (COMPROBAR!!)
 
 	console.log("mazoInicial.length: " + mazoInicial.length)
-	if (mazoInicial.length === 0 && mazoSobrantes.length === 0) {
+	if (mazoInicial.length === 1 && mazoSobrantes.length === 0) {
         finalizarJuego();
     } else if (mazoInicial.length === 1) {
 		let carta = mazoInicial[mazoInicial.length - 1];
