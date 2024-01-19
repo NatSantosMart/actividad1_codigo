@@ -4,7 +4,7 @@ let palos = ["viu", "cua", "hex", "cir"];
 // Array de número de cartas
 // let numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 // En las pruebas iniciales solo se trabajará con cuatro cartas por palo:
- let numeros = [9, 10, 11, 12];
+ let numeros = [1 , 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 // paso (top y left) en pixeles de una carta a la siguiente en un mazo
 let paso = 5;
@@ -312,10 +312,9 @@ function cargarTapeteInicial(mazo) {
 	
 	mazo.forEach((carta, index) => {
         carta.style.position = 'absolute';
-        carta.style.left = index * paso * 1.5  + 'px';
-		carta.style.top = index * paso *2.5 + 'px';
-		
-		carta.style.width = '20%'; 
+        carta.style.left = index * paso   + 'px';
+		carta.style.top = index * paso  + 'px';
+		carta.style.width = '20%';
         if(tapeteInicial){
 			tapeteInicial.appendChild(carta);
 		}
