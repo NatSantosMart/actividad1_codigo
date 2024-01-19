@@ -2,13 +2,6 @@
 	Especificaciones CSS para el juego del solitario 
 */
 
-/* /*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! 
-	Completar los estilos que faltan y modificar al gusto del alumno
-**/
-
-/* Todos los contadores estarán ubicados en la parte inferior 
-   derecha (position absolute) de los respectivos tapetes (position relative).
-*/
 .contador {
 	position: absolute;
 	bottom: 0px;

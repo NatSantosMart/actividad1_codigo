@@ -2,9 +2,9 @@
 // Array de palos
 let palos = ["viu", "cua", "hex", "cir"];
 // Array de número de cartas
-//let numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+// let numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 // En las pruebas iniciales solo se trabajará con cuatro cartas por palo:
-let numeros = [9, 10, 11, 12];
+ let numeros = [9, 10, 11, 12];
 
 // paso (top y left) en pixeles de una carta a la siguiente en un mazo
 let paso = 5;
@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", comenzarJuego);
 
 //Objeto que se mueve
 configurarDragAndDropEmisor(); 
+
 configurarDragAndDropSobrantes(); 
 configurarDragAndDropReceptor(tapeteReceptor1, mazoReceptor1, contReceptor1)
 configurarDragAndDropReceptor(tapeteReceptor2, mazoReceptor2, contReceptor2)
@@ -58,7 +59,12 @@ function configurarDragAndDropEmisor() {
 	tapeteInicial.ondrag = function(e) { }; 
 	tapeteInicial.ondragend = function() { }; 
 }
+
 function configurarDragAndDropSobrantes() {
+	tapeteSobrantes.ondragstart = al_mover; 
+	tapeteSobrantes.ondrag = function(e) { }; 
+	tapeteSobrantes.ondragend = function() { };
+
     tapeteSobrantes.ondragenter = function(e) { e.preventDefault(); };
     tapeteSobrantes.ondragover = function(e) { e.preventDefault(); };
     tapeteSobrantes.ondragleave = function(e) { e.preventDefault(); };
@@ -72,6 +78,7 @@ function configurarDragAndDropReceptor(tapete_receptor, mazo_receptor, cont_rece
 	tapete_receptor.ondragleave = function(e) { e.preventDefault(); };
 	tapete_receptor.ondrop = function (e) {
 		soltarReceptor(e,  tapeteInicial, tapete_receptor, mazoInicial, mazo_receptor, contInicial, cont_receptor);
+		soltarReceptor(e,  tapeteSobrantes, tapete_receptor, mazoSobrantes, mazo_receptor, contSobrantes, cont_receptor);
 	};
 }
 
@@ -261,23 +268,7 @@ function cargarMazoInicial(){
     });
 	
 }
-function getCartaFromId(carta_id, numero, palo) {
-	let carta = new Image();
-    carta.src = 'imagenes/baraja/' + carta_id + '.png';
-    carta.id = carta_id;
-    carta.alt = carta_id;
-    carta.setAttribute('data-numero', numero.toString());
-    carta.setAttribute('data-palo', palo);
 
-    // Estilos CSS de la carta en tapete destino
-    carta.style.position = "absolute";
-    carta.style.top = "50%";
-    carta.style.left = "50%";
-    carta.style.transform = "translate(-50%, -50%)";
-    carta.style.width = '62%';
-
-	return carta; 
-}
 
 function arrancarTiempo(){
 	
@@ -331,16 +322,42 @@ function cargarTapeteInicial(mazo) {
     });
 
     // Ajustar el contador de cartas en el tapete inicial
-    setContador(contInicial, mazo.length);	
+    setContador(contInicial, mazoInicial.length);	
 } 
+function cargarTapeteSobrantes(mazo) {
+	
+	mazo.forEach((carta, index) => {
+		setEstilosCarta(carta);
+        if(tapeteInicial){
+			tapeteSobrantes.appendChild(carta);
+		}
+    });
+
+    // Ajustar el contador de cartas en el tapete inicial
+    setContador(contSobrantes, mazoSobrantes.length);
+	
+} 
+
 
 function actualizarTapeteInicial() {
     // Limpiar el tapeteInicial
     tapeteInicial.innerHTML = '';
 
+	tapeteInicial.appendChild(contInicial);
+
     // Cargar las cartas restantes del mazoInicial en el tapeteInicial
     cargarTapeteInicial(mazoInicial);
 }
+function actualizarTapeteSobrantes() {
+    // Limpiar el tapeteInicial
+    tapeteSobrantes.innerHTML = '';
+
+	tapeteSobrantes.appendChild(contSobrantes);
+
+    // Cargar las cartas restantes del mazoInicial en el tapeteInicial
+    cargarTapeteSobrantes(mazoSobrantes);
+}
+
 
 /**
  	Esta función debe incrementar el número correspondiente al contenido textual
@@ -383,16 +400,11 @@ function insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino
 	contMovimientos.textContent = (parseInt(contMovimientos.textContent) + 1).toString(); //contador de movimientos
 	setContador(cont_destino, mazo_destino.length); //Es posible que el SetContador se haga dos veces (COMPROBAR!!)
 
-	console.log("mazoInicial.length: " + mazoInicial.length)
 	if (mazoInicial.length === 1 && mazoSobrantes.length === 0) {
         finalizarJuego();
     } else if (mazoInicial.length === 1) {
-		let carta = mazoInicial[mazoInicial.length - 1];
-		carta.style.position = "absolute";
-		carta.style.top = "50%";
-		carta.style.left = "50%";
-		carta.style.transform = "translate(-50%, -50%)";
-		carta.style.width = '62%';
+		let carta = mazoInicial[mazoInicial.length - 1];		
+		setEstilosCarta(carta);
 		tapete_destino.appendChild(carta);
 		mazo_destino.push(carta);
 		cont_destino.incContador = function() {
@@ -419,8 +431,6 @@ function insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino
         //barajar(mazoInicial);
         cargarTapeteInicial(mazoInicial);
     }
-	console.log("Carta insertada: " + carta.getAttribute('data-numero') + carta.getAttribute('data-palo')); 
-	console.log("Funcion insertar cont_destino:" + getContador(cont_destino)); 
 	
 }
 function eliminarCartaEnTapete (carta, tapete_origen, mazo_origen, cont_origen){
@@ -429,17 +439,36 @@ function eliminarCartaEnTapete (carta, tapete_origen, mazo_origen, cont_origen){
 		decContador();
 	};
 	
-	setContador(cont_origen, mazo_origen.length);
-		
-	console.log("Funcion eliminar cont_origen:" + getContador(cont_origen)); 	
-	
 	actualizarTapeteInicial();
+	actualizarTapeteSobrantes(); 
 }
 
 function finalizarJuego(){
-	console.log("El juegos se ha finalizado")
 	if(temporizador) clearInterval(temporizador)
     document.getElementById('modal-endgame').style.display = "block";
     document.getElementById('resumen-movimientos').innerText = contMovimientos.innerText;
     document.getElementById('resumen-tiempo').innerText = contTiempo.innerText;
+}
+
+function getCartaFromId(carta_id, numero, palo) {
+	let carta = new Image();
+    carta.src = 'imagenes/baraja/' + carta_id + '.png';
+    carta.id = carta_id;
+    carta.alt = carta_id;
+    carta.setAttribute('data-numero', numero.toString());
+    carta.setAttribute('data-palo', palo);
+
+    // Estilos CSS de la carta en tapete destino
+    setEstilosCarta(carta);
+
+	return carta; 
+}
+
+function setEstilosCarta (carta){
+	carta.style.position = "absolute";
+    carta.style.top = "50%";
+    carta.style.left = "50%";
+    carta.style.transform = "translate(-50%, -50%)";
+    carta.style.width = '62%';
+
 }
