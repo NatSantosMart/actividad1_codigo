@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", comenzarJuego);
 //Drag & Drop
 
 //Objeto que se mueve
-configurarDragAndDropEmisor(); 
+configurarDragAndDropInicial(); 
 
 configurarDragAndDropSobrantes(); 
 configurarDragAndDropReceptor(tapeteReceptor1, mazoReceptor1, contReceptor1)
@@ -53,7 +53,7 @@ configurarDragAndDropReceptor(tapeteReceptor2, mazoReceptor2, contReceptor2)
 configurarDragAndDropReceptor(tapeteReceptor3, mazoReceptor3, contReceptor3)
 configurarDragAndDropReceptor(tapeteReceptor4, mazoReceptor4, contReceptor4)
 
-function configurarDragAndDropEmisor() {
+function configurarDragAndDropInicial() {
     tapeteInicial.ondragstart = al_mover; 
 	tapeteInicial.ondrag = function(e) { }; 
 	tapeteInicial.ondragend = function() { }; 
@@ -194,7 +194,7 @@ function validarCondicionesMovimiento (carta, tapete_origen, tapete_destino, maz
     //los tapetes receptores vacíos solo aceptan cartas con el número 12
     if(mazo_destino.length == 0){
         if(numeroNuevaCarta == 12){
-			
+
 			validacionCorrecta = true; 
         }
     } else {
