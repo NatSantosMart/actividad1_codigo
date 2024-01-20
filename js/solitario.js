@@ -1,9 +1,8 @@
 /***** INICIO DECLARACIÓN DE VARIABLES GLOBALES *****/
+
 // Array de palos
 let palos = ["viu", "cua", "hex", "cir"];
 // Array de número de cartas
-// let numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-// En las pruebas iniciales solo se trabajará con cuatro cartas por palo:
  let numeros = [1 , 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 // paso (top y left) en pixeles de una carta a la siguiente en un mazo
@@ -35,7 +34,7 @@ let contReceptor4   = document.getElementById("contador_receptor4");
 let contMovimientos = document.getElementById("contador_movimientos");
 
 // Tiempo
-let contTiempo; // span cuenta tiempo
+let contTiempo; // cuenta tiempo
 let segundos 	 = 0;    // cuenta de segundos
 let temporizador = null; // manejador del temporizador
 let contador     = 0;    // contador de cartas
@@ -106,7 +105,8 @@ function comenzarJuego() {
 
 	contTiempo = document.getElementById("contador_tiempo"); 
 
-	document.getElementById('reset-end').addEventListener('click', () => {document.getElementById('modal-endgame').style.display = "none"; resetGame()});
+	document.getElementById('reset-end').addEventListener('click', () => 
+			{document.getElementById('modal-endgame').style.display = "none"; resetGame()});
 	
 	// Barajar y dejar mazoInicial en tapete inicial
 	barajar(mazoInicial); 
@@ -133,27 +133,6 @@ function al_mover(e) {
 	e.dataTransfer.setData( "text/plain/id", e.target.id );
 }
 
-function soltarReceptor(e, tapete_origen, tapete_destino, mazo_origen, mazo_destino, cont_origen, cont_destino, tipoTapete) {
-    e.preventDefault();
-
-    let numero = e.dataTransfer.getData("text/plain/numero");
-    let palo = e.dataTransfer.getData("text/plain/palo");
-    let carta_id = e.dataTransfer.getData("text/plain/id");
-
-    // Obtener la carta que se está moviendo
-    let carta = getCartaFromId(carta_id, numero, palo); 
-    
-	// Comprobar que existe carta en mazo origen
-	let index = mazo_origen.findIndex(c => c.id === carta_id);
-	if (index !== -1) {
-
-		// Comprobar si la carta movida es la última del mazo original
-		if (index === mazo_origen.length - 1) {
-			validarCondicionesMovimiento(carta, tapete_origen, tapete_destino, mazo_origen, 
-										mazo_destino, cont_origen, cont_destino, tipoTapete)
-		}
-	}
-}
 function soltarSobrantes(e) {
     e.preventDefault();
 
@@ -178,16 +157,45 @@ function soltarSobrantes(e) {
         }
 	}
 }
+
+function soltarReceptor(e, tapete_origen, tapete_destino, mazo_origen, mazo_destino, cont_origen, cont_destino, tipoTapete) {
+    e.preventDefault();
+
+    let numero = e.dataTransfer.getData("text/plain/numero");
+    let palo = e.dataTransfer.getData("text/plain/palo");
+    let carta_id = e.dataTransfer.getData("text/plain/id");
+
+    // Obtener la carta que se está moviendo
+    let carta = getCartaFromId(carta_id, numero, palo); 
+    
+	// Comprobar que existe carta en mazo origen
+	let index = mazo_origen.findIndex(c => c.id === carta_id);
+	if (index !== -1) {
+
+		// Comprobar si la carta movida es la última del mazo original
+		if (index === mazo_origen.length - 1) {
+			validacionCorrecta = validarCondicionesMovimiento(carta, tapete_origen, tapete_destino, mazo_origen, 
+										mazo_destino, cont_origen, cont_destino, tipoTapete)
+			
+			if(validacionCorrecta){
+				insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino)
+				eliminarCartaEnTapete (carta, tapete_origen, mazo_origen, cont_origen)
+			}
+		}
+	}
+}
+
 function validarCondicionesMovimiento (carta, tapete_origen, tapete_destino, mazo_origen, mazo_destino, cont_origen, cont_destino, tipoTapete) {
 
+	let validacionCorrecta = false; 
 	let numeroNuevaCarta = carta.getAttribute('data-numero'); 
 	let paloNuevaCarta = carta.getAttribute('data-palo'); 
 
     //los tapetes receptores vacíos solo aceptan cartas con el número 12
     if(mazo_destino.length == 0){
         if(numeroNuevaCarta == 12){
-            insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino)
-            eliminarCartaEnTapete (carta, tapete_origen, mazo_origen, cont_origen)
+			
+			validacionCorrecta = true; 
         }
     } else {
         let ultimaCartaMazo = mazo_destino[mazo_destino.length -1];
@@ -199,10 +207,10 @@ function validarCondicionesMovimiento (carta, tapete_origen, tapete_destino, maz
 
         //Número inmediatamente inferior y color diferente al del mazo destino
         if((numeroUltimaCartaMazo - 1 == numeroNuevaCarta) && (tieneColorGrisUltimaCarta != tieneColorGrisNuevaCarta)){
-            insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino)
-            eliminarCartaEnTapete (carta, tapete_origen, mazo_origen, cont_origen)
+            validacionCorrecta = true; 
         }
     }
+	return validacionCorrecta; 
 }
 
 
@@ -231,7 +239,8 @@ function validarCondicionesMovimiento (carta, tapete_origen, tapete_destino, maz
 */
 
 function resetGame(){
-	[contInicial, contSobrantes, contReceptor1, contReceptor2, contReceptor3, contReceptor4, contMovimientos].forEach((contador) => setContador(contador, 0));
+	[contInicial, contSobrantes, contReceptor1, contReceptor2, contReceptor3, contReceptor4, contMovimientos].forEach((contador) => 
+				setContador(contador, 0));
 
     // Restablecimiento de mazos
     [mazoInicial, mazoSobrantes, mazoReceptor1, mazoReceptor2, mazoReceptor3, mazoReceptor4].forEach((mazo) => mazo.length = 0);
