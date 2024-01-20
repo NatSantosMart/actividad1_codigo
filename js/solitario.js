@@ -44,10 +44,9 @@ document.addEventListener("DOMContentLoaded", comenzarJuego);
 
 //Drag & Drop
 
-//Objeto que se mueve
 configurarDragAndDropInicial(); 
-
 configurarDragAndDropSobrantes(); 
+
 configurarDragAndDropReceptor(tapeteReceptor1, mazoReceptor1, contReceptor1)
 configurarDragAndDropReceptor(tapeteReceptor2, mazoReceptor2, contReceptor2)
 configurarDragAndDropReceptor(tapeteReceptor3, mazoReceptor3, contReceptor3)
@@ -81,12 +80,6 @@ function configurarDragAndDropReceptor(tapete_receptor, mazo_receptor, cont_rece
 	};
 }
 
-// Rutina asociada a boton reset
-/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
-
-
-// El juego arranca ya al cargar la página: no se espera a reiniciar
-/*** !!!!!!!!!!!!!!!!!!! CODIGO !!!!!!!!!!!!!!!!!!!! **/
 
 // Desarrollo del comienzo de juego
 function comenzarJuego() {
@@ -174,8 +167,7 @@ function soltarReceptor(e, tapete_origen, tapete_destino, mazo_origen, mazo_dest
 
 		// Comprobar si la carta movida es la última del mazo original
 		if (index === mazo_origen.length - 1) {
-			validacionCorrecta = validarCondicionesMovimiento(carta, tapete_origen, tapete_destino, mazo_origen, 
-										mazo_destino, cont_origen, cont_destino, tipoTapete)
+			validacionCorrecta = validarCondicionesMovimiento(carta, mazo_destino)
 			
 			if(validacionCorrecta){
 				insertarCartaEnTapete(carta, tapete_destino, mazo_destino, cont_destino)
@@ -185,7 +177,7 @@ function soltarReceptor(e, tapete_origen, tapete_destino, mazo_origen, mazo_dest
 	}
 }
 
-function validarCondicionesMovimiento (carta, tapete_origen, tapete_destino, mazo_origen, mazo_destino, cont_origen, cont_destino, tipoTapete) {
+function validarCondicionesMovimiento (carta, mazo_destino) {
 
 	let validacionCorrecta = false; 
 	let numeroNuevaCarta = carta.getAttribute('data-numero'); 
